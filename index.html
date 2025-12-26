@@ -69,6 +69,21 @@
       font-size: 0.9rem;
       color: #666;
     }
+    #allTypes {
+      margin-top: 16px;
+      font-size: 0.9rem;
+    }
+    #allTypes h3 {
+      margin: 12px 0 4px;
+      font-size: 1rem;
+    }
+    #allTypes ul {
+      margin: 0;
+      padding-left: 1.2em;
+    }
+    #allTypes li {
+      margin: 2px 0;
+    }
   </style>
 </head>
 <body>
@@ -203,6 +218,8 @@
       「当たっている部分」「違うと感じる部分」の両方を手がかりにして、
       自分のコミュニケーションの適性やペースを考えるきっかけにしてください。
     </div>
+    <!-- 🔽 ここに全タイプ一覧が入る -->
+    <div id="allTypes"></div>
   </div>
 
   <script>
@@ -294,6 +311,46 @@
       H: "H：QとDが同程度の中庸タイプ"
     };
 
+    // 全タイプ一覧を描画する関数
+    function renderAllTypes() {
+      const container = document.getElementById("allTypes");
+      let html = "";
+
+      html += "<hr>";
+      html += "<h3>各文字の意味（全タイプ一覧）</h3>";
+      html += "<p>結果の4文字は、それぞれ別の軸を表しています。同じ文字でも「何文字目か」で意味が違うので注意してください。</p>";
+
+      // 1文字目
+      html += "<h3>1文字目：関係性・場の好み（F / O / N / P）</h3><ul>";
+      ["F","O","N","P"].forEach(k => {
+        html += "<li>" + (firstAxisLabels[k] || "") + "</li>";
+      });
+      html += "</ul>";
+
+      // 2文字目
+      html += "<h3>2文字目：距離感の扱い方（T / R / M）</h3><ul>";
+      ["T","R","M"].forEach(k => {
+        html += "<li>" + (secondAxisLabels[k] || "") + "</li>";
+      });
+      html += "</ul>";
+
+      // 3文字目
+      html += "<h3>3文字目：対人願望のキャパ（S / L / N）</h3><ul>";
+      ["S","L","N"].forEach(k => {
+        html += "<li>" + (thirdAxisLabels[k] || "") + "</li>";
+      });
+      html += "</ul>";
+
+      // 4文字目
+      html += "<h3>4文字目：対人エネルギーの回復スピード（Q / D / H）</h3><ul>";
+      ["Q","D","H"].forEach(k => {
+        html += "<li>" + (fourthAxisLabels[k] || "") + "</li>";
+      });
+      html += "</ul>";
+
+      container.innerHTML = html;
+    }
+
     document.getElementById("quiz").addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -381,12 +438,16 @@
         tieNoteDiv.textContent = "";
       }
 
+      // 全タイプ一覧を描画
+      renderAllTypes();
+
       resultDiv.style.display = "block";
     });
 
     document.getElementById("resetBtn").addEventListener("click", function () {
       document.getElementById("quiz").reset();
       document.getElementById("result").style.display = "none";
+      document.getElementById("allTypes").innerHTML = "";
     });
   </script>
 </body>

@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>コミュニケーション適性タイプ診断</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.6;
+      padding: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin-top: 0.5em;
+      margin-bottom: 0.3em;
+    }
+    .question {
+      margin: 16px 0;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ddd;
+    }
+    .question-title {
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    .options label {
+      display: block;
+      margin: 3px 0;
+      cursor: pointer;
+    }
+    button {
+      padding: 10px 18px;
+      font-size: 1rem;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+    #submitBtn {
+      background: #4b7bec;
+      color: #fff;
+    }
+    #resetBtn {
+      background: #eee;
+      color: #333;
+      margin-left: 8px;
+    }
+    #result {
+      margin-top: 24px;
+      padding: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      background: #fafafa;
+      display: none;
+    }
+    .type-code {
+      font-size: 1.4rem;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .axis {
+      margin-top: 8px;
+    }
+    .note {
+      margin-top: 8px;
+      font-size: 0.9rem;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1>コミュニケーション適性タイプ診断</h1>
+  <p>
+    10問に答えると、あなたのコミュニケーション適性タイプが
+    <strong>4文字（例：NRSD）</strong>で表示されます。<br>
+    あくまで作者の仮説モデルにもとづく簡易診断なので、
+    「当たってるかも？」「違うかも？」とツッコミながら自己理解のきっかけにしてください。
+  </p>
+
+  <form id="quiz">
+    <!-- Q1 -->
+    <div class="question">
+      <div class="question-title">① 人と会話するのは？</div>
+      <div class="options">
+        <label><input type="radio" name="q1" value="a"> めっちゃ好き</label>
+        <label><input type="radio" name="q1" value="b"> 好き</label>
+        <label><input type="radio" name="q1" value="c"> まぁまぁ</label>
+        <label><input type="radio" name="q1" value="d"> 苦手</label>
+        <label><input type="radio" name="q1" value="e"> 大嫌い</label>
+      </div>
+    </div>
+
+    <!-- Q2 -->
+    <div class="question">
+      <div class="question-title">② 一番話してて楽しいのは？</div>
+      <div class="options">
+        <label><input type="radio" name="q2" value="a"> とても仲の良い親友</label>
+        <label><input type="radio" name="q2" value="b"> いつも会う友達</label>
+        <label><input type="radio" name="q2" value="c"> 家族</label>
+        <label><input type="radio" name="q2" value="d"> 仲の良い先生や上司</label>
+        <label><input type="radio" name="q2" value="e"> 初めて会う人</label>
+      </div>
+    </div>
+
+    <!-- Q3 -->
+    <div class="question">
+      <div class="question-title">③ 会話はどれくらいしますか？（1日・普段の感覚で）</div>
+      <div class="options">
+        <label><input type="radio" name="q3" value="a"> 毎日たくさんの人と話す</label>
+        <label><input type="radio" name="q3" value="b"> 5〜6人くらいと話す</label>
+        <label><input type="radio" name="q3" value="c"> 3人くらいと話す</label>
+        <label><input type="radio" name="q3" value="d"> あまり話さない</label>
+        <label><input type="radio" name="q3" value="e"> 基本的に話さない</label>
+      </div>
+    </div>
+
+    <!-- Q4 -->
+    <div class="question">
+      <div class="question-title">④ 初対面の人とは？</div>
+      <div class="options">
+        <label><input type="radio" name="q4" value="a"> 誰でも話せる</label>
+        <label><input type="radio" name="q4" value="b"> 得意</label>
+        <label><input type="radio" name="q4" value="c"> 雑談くらいならできる</label>
+        <label><input type="radio" name="q4" value="d"> 苦手</label>
+        <label><input type="radio" name="q4" value="e"> ほとんど話せない</label>
+      </div>
+    </div>
+
+    <!-- Q5 -->
+    <div class="question">
+      <div class="question-title">⑤ 2人で話していたら、もう1人が合流して3人になりました。あなたは？</div>
+      <div class="options">
+        <label><input type="radio" name="q5" value="a"> 3人でも問題なく話せる</label>
+        <label><input type="radio" name="q5" value="b"> それぞれとバランスよく話せる</label>
+        <label><input type="radio" name="q5" value="c"> まあ話せるかな、ぐらい</label>
+        <label><input type="radio" name="q5" value="d"> 2:1くらいで相手を優先し、自分は控えめになる</label>
+        <label><input type="radio" name="q5" value="e"> なんとなく静かになってフェードアウトしがち</label>
+      </div>
+    </div>
+
+    <!-- Q6 -->
+    <div class="question">
+      <div class="question-title">⑥ とても良いことがあったとき、どうしますか？</div>
+      <div class="options">
+        <label><input type="radio" name="q6" value="a"> 知っている人ほぼ全員に言いたくなる</label>
+        <label><input type="radio" name="q6" value="b"> 友達みんなに言いたくなる</label>
+        <label><input type="radio" name="q6" value="c"> 仲の良い友達何人かにだけ話す</label>
+        <label><input type="radio" name="q6" value="d"> 一人か二人にだけ共有する</label>
+        <label><input type="radio" name="q6" value="e"> 誰にも言わずに自分の中だけにしておく</label>
+      </div>
+    </div>
+
+    <!-- Q7 -->
+    <div class="question">
+      <div class="question-title">⑦ どちらかと言うと、ふだんの口調は？</div>
+      <div class="options">
+        <label><input type="radio" name="q7" value="a"> 敬語で話すことが多い</label>
+        <label><input type="radio" name="q7" value="b"> タメ口で話すことが多い</label>
+      </div>
+    </div>
+
+    <!-- Q8 -->
+    <div class="question">
+      <div class="question-title">⑧ よく話す相手の年齢層は？</div>
+      <div class="options">
+        <label><input type="radio" name="q8" value="a"> 年下と話すことが多い</label>
+        <label><input type="radio" name="q8" value="b"> 同い年と話すことが多い</label>
+        <label><input type="radio" name="q8" value="c"> 年上と話すことが多い</label>
+      </div>
+    </div>
+
+    <!-- Q9 -->
+    <div class="question">
+      <div class="question-title">⑨ どちらかと言うと、会話には…</div>
+      <div class="options">
+        <label><input type="radio" name="q9" value="a"> 割とすぐ飽きてしまう</label>
+        <label><input type="radio" name="q9" value="b"> ずっと話していても飽きにくい</label>
+      </div>
+    </div>
+
+    <!-- Q10 -->
+    <div class="question">
+      <div class="question-title">⑩ どちらかと言うと、自分は？</div>
+      <div class="options">
+        <label><input type="radio" name="q10" value="a"> おしゃべりな方だ</label>
+        <label><input type="radio" name="q10" value="b"> 無口な方だ</label>
+      </div>
+    </div>
+
+    <button type="submit" id="submitBtn">診断する</button>
+    <button type="button" id="resetBtn">リセット</button>
+  </form>
+
+  <div id="result">
+    <div class="type-code" id="typeCode"></div>
+    <div id="typeExplanation"></div>
+    <div id="tieNote" class="note"></div>
+    <div class="note">
+      ※この診断はあくまで簡易的な自己理解ツールです。<br>
+      「当たっている部分」「違うと感じる部分」の両方を手がかりにして、
+      自分のコミュニケーションの適性やペースを考えるきっかけにしてください。
+    </div>
+  </div>
+
+  <script>
+    // スコア定義
+    const scores = {
+      q1: {
+        a: {F: 3, N: 3},
+        b: {F: 2, N: 2},
+        c: {},
+        d: {O: 2, P: 2},
+        e: {O: 3, P: 3}
+      },
+      q2: {
+        a: {F: 3},
+        b: {F: 2},
+        c: {O: 2},
+        d: {N: 3},
+        e: {P: 3}
+      },
+      q3: {
+        a: {L: 1, Q: 2},
+        b: {L: 1, Q: 1},
+        c: {Q: 1},
+        d: {S: 2, D: 2},
+        e: {S: 3, D: 3}
+      },
+      q4: {
+        a: {F: 1, O: 1, T: 3},
+        b: {F: 1, O: 1, T: 2},
+        c: {N: 1, P: 1},
+        d: {N: 1, P: 1, R: 2},
+        e: {N: 1, P: 1, R: 3}
+      },
+      q5: {
+        a: {T: 3},
+        b: {T: 2},
+        c: {T: 1},
+        d: {R: 2},
+        e: {R: 3}
+      },
+      q6: {
+        a: {L: 3, Q: 1},
+        b: {L: 3, Q: 1},
+        c: {L: 1},
+        d: {S: 2},
+        e: {S: 3, D: 3}
+      },
+      q7: {
+        a: {N: 1, P: 1},
+        b: {F: 1, O: 1}
+      },
+      q8: {
+        a: {F: 1, O: 1},
+        b: {F: 1, O: 1},
+        c: {N: 1, P: 1}
+      },
+      q9: {
+        a: {S: 3},
+        b: {L: 3}
+      },
+      q10: {
+        a: {Q: 3},
+        b: {D: 3}
+      }
+    };
+
+    const firstAxisLabels = {
+      F: "F：友好的で距離が近いコミュを好むタイプ",
+      O: "O：友好的だが、ほどよく距離をとるコミュを好むタイプ",
+      N: "N：社交的な場で距離近めに関わるのが得意なタイプ",
+      P: "P：社交的だが、フォーマルで距離遠めな関わりが得意なタイプ"
+    };
+
+    const secondAxisLabels = {
+      T: "T：距離感の調整（ベクトル操作）が比較的上手なタイプ",
+      R: "R：距離感が極端になりやすいラフなタイプ",
+      M: "M：場面によってTとRの両面が出る中間タイプ"
+    };
+
+    const thirdAxisLabels = {
+      S: "S：少ないコミュ量で満足しやすいタイプ（ロー需要）",
+      L: "L：たくさん話さないと満足しにくいタイプ（ハイ需要）",
+      N: "N：SとLが同程度で、場面によって変わるタイプ"
+    };
+
+    const fourthAxisLabels = {
+      Q: "Q：対人エネルギーの回復が早く、頻繁に人と関わりたくなるタイプ",
+      D: "D：一度人と関わると、しばらく一人時間が必要になるタイプ",
+      H: "H：QとDが同程度の中庸タイプ"
+    };
+
+    document.getElementById("quiz").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      // 未回答チェック
+      for (let i = 1; i <= 10; i++) {
+        const qName = "q" + i;
+        const selected = document.querySelector('input[name="' + qName + '"]:checked');
+        if (!selected) {
+          alert("質問" + i + "が未回答です。");
+          return;
+        }
+      }
+
+      // 初期スコア
+      const total = {
+        F: 0, O: 0, N: 0, P: 0,
+        T: 0, R: 0,
+        S: 0, L: 0,
+        Q: 0, D: 0
+      };
+
+      // 集計
+      for (let i = 1; i <= 10; i++) {
+        const qName = "q" + i;
+        const selected = document.querySelector('input[name="' + qName + '"]:checked');
+        const value = selected.value;
+        const s = scores[qName][value] || {};
+        for (const key in s) {
+          if (total.hasOwnProperty(key)) {
+            total[key] += s[key];
+          }
+        }
+      }
+
+      // 1文字目：F/O/N/P
+      const firstLetters = ["F", "O", "N", "P"];
+      let maxFirst = -Infinity;
+      let firstMaxLetters = [];
+      firstLetters.forEach(letter => {
+        if (total[letter] > maxFirst) {
+          maxFirst = total[letter];
+          firstMaxLetters = [letter];
+        } else if (total[letter] === maxFirst) {
+          firstMaxLetters.push(letter);
+        }
+      });
+      const firstChar = firstMaxLetters[0];
+
+      // 2文字目：T/R（同点ならM）
+      let secondChar = "M";
+      if (total.T > total.R) secondChar = "T";
+      else if (total.R > total.T) secondChar = "R";
+
+      // 3文字目：S/L（同点ならN）
+      let thirdChar = "N";
+      if (total.S > total.L) thirdChar = "S";
+      else if (total.L > total.S) thirdChar = "L";
+
+      // 4文字目：Q/D（同点ならH）
+      let fourthChar = "H";
+      if (total.Q > total.D) fourthChar = "Q";
+      else if (total.D > total.Q) fourthChar = "D";
+
+      const typeCode = firstChar + secondChar + thirdChar + fourthChar;
+
+      // 結果表示
+      const resultDiv = document.getElementById("result");
+      const typeCodeDiv = document.getElementById("typeCode");
+      const typeExplanationDiv = document.getElementById("typeExplanation");
+      const tieNoteDiv = document.getElementById("tieNote");
+
+      typeCodeDiv.textContent = "あなたのタイプ： " + typeCode;
+
+      let html = "";
+      html += '<div class="axis"><strong>1文字目（関係性・場の好み）</strong><br>' + (firstAxisLabels[firstChar] || "") + "</div>";
+      html += '<div class="axis"><strong>2文字目（距離感の扱い方）</strong><br>' + (secondAxisLabels[secondChar] || "") + "</div>";
+      html += '<div class="axis"><strong>3文字目（対人願望のキャパ）</strong><br>' + (thirdAxisLabels[thirdChar] || "") + "</div>";
+      html += '<div class="axis"><strong>4文字目（対人エネルギーの回復スピード）</strong><br>' + (fourthAxisLabels[fourthChar] || "") + "</div>";
+      typeExplanationDiv.innerHTML = html;
+
+      if (firstMaxLetters.length > 1) {
+        tieNoteDiv.textContent =
+          "※1文字目は " + firstMaxLetters.join(" / ") + " が同じスコアでしたが、最初の「" + firstChar + "」として表示しています。";
+      } else {
+        tieNoteDiv.textContent = "";
+      }
+
+      resultDiv.style.display = "block";
+    });
+
+    document.getElementById("resetBtn").addEventListener("click", function () {
+      document.getElementById("quiz").reset();
+      document.getElementById("result").style.display = "none";
+    });
+  </script>
+</body>
+</html>
